@@ -1,0 +1,208 @@
+{
+  "saldoInicial": 3459.41,
+  "saldoFinal": 4336.76,
+  "totalIngresos": 2104.21,
+  "totalGastos": 1226.86,
+  "movimientos": [
+    {
+      "categoria": "Transferencias",
+      "concepto": "Revolut**5406*",
+      "importe": -10
+    },
+    {
+      "categoria": "Transferencias",
+      "concepto": "Revolut**5406*",
+      "importe": -10
+    },
+    {
+      "categoria": "Varios",
+      "concepto": "6200 Alcala de Henares",
+      "importe": -8.06
+    },
+    {
+      "categoria": "Transferencias",
+      "concepto": "Revolut**5406*",
+      "importe": -47
+    },
+    {
+      "categoria": "Restaurante",
+      "concepto": "LOS ALMENDROS",
+      "importe": -12.15
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 150
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE EMMA",
+      "importe": 9.1
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE CLAUDIA",
+      "importe": 9.1
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE LUCIA",
+      "importe": 9.1
+    },
+    {
+      "categoria": "Alimentación",
+      "concepto": "Mercadona",
+      "importe": -36.31
+    },
+    {
+      "categoria": "Alimentación",
+      "concepto": "Hipercor",
+      "importe": -12.85
+    },
+    {
+      "categoria": "Varios",
+      "concepto": "ALCALA DE HENAR",
+      "importe": -15.18
+    },
+    {
+      "categoria": "Alimentación",
+      "concepto": "STELAM MARKET",
+      "importe": -15.25
+    },
+    {
+      "categoria": "Alimentación",
+      "concepto": "Mercadona",
+      "importe": -30.95
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 570
+    },
+    {
+      "categoria": "Ropa",
+      "concepto": "Victoria's Secret",
+      "importe": -74.23
+    },
+    {
+      "categoria": "Transferencias",
+      "concepto": "Revolut**5406*",
+      "importe": -500
+    },
+    {
+      "categoria": "Restaurante",
+      "concepto": "Uber Eats",
+      "importe": -50
+    },
+    {
+      "categoria": "Varios",
+      "concepto": "Interflora",
+      "importe": -45.98
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 96
+    },
+    {
+      "categoria": "Restaurante",
+      "concepto": "EL TUMBAO PUB",
+      "importe": -24
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 74.6
+    },
+    {
+      "categoria": "Restaurante",
+      "concepto": "VISTA CON SABOR",
+      "importe": -74.6
+    },
+    {
+      "categoria": "Nómina",
+      "concepto": "Nómina Actex",
+      "importe": 638.42
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 150
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 120
+    },
+    {
+      "categoria": "Transporte",
+      "concepto": "Petroprix",
+      "importe": -61.9
+    },
+    {
+      "categoria": "Ropa",
+      "concepto": "Pull & Bear",
+      "importe": -29.03
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE CLAUDIA",
+      "importe": 3
+    },
+    {
+      "categoria": "Alimentación",
+      "concepto": "BM CALERUEGA",
+      "importe": -11.92
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM A CLAUDIA",
+      "importe": -10.57
+    },
+    {
+      "categoria": "Varios",
+      "concepto": "SERVIOCIO 2010",
+      "importe": -10
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM A Andrea",
+      "importe": -14.78
+    },
+    {
+      "categoria": "Restaurante",
+      "concepto": "LE TAVERNIER -",
+      "importe": -97.5
+    },
+    {
+      "categoria": "Varios",
+      "concepto": "C. ESTETICA BEL",
+      "importe": -19
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 5.6
+    },
+    {
+      "categoria": "Alimentación",
+      "concepto": "Mercadona",
+      "importe": -5.6
+    },
+    {
+      "categoria": "Nómina",
+      "concepto": "Nómina Actex",
+      "importe": 24.27
+    },
+    {
+      "categoria": "Nómina",
+      "concepto": "Nómina Actex",
+      "importe": 95.02
+    },
+    {
+      "categoria": "Bizum",
+      "concepto": "BIZUM DE MONICA",
+      "importe": 150
+    }
+  ]
+}

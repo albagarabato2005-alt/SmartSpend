@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSpend Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --green-light: #e6f4ea; --green-accent: #16a34a;
+            --red-light: #fce8e6; --red-accent: #dc2626;
+            --purple-light: #f3e8ff; --purple-accent: #9333ea;
+            --blue-light: #e0f2fe; --blue-accent: #0284c7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            margin: 0; padding: 16px;
+        }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-size: 20px; margin: 0; }
+        .header p { color: var(--text-secondary); margin: 4px 0 0 0; font-size: 13px; }
+
+        /* Upload Area */
+        .upload-card {
+            background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 16px;
+            padding: 16px; text-align: center; margin-bottom: 20px; cursor: pointer;
+        }
+        .upload-card input { display: none; }
+        .upload-btn {
+            background: var(--blue-accent); color: white; padding: 8px 16px;
+            border-radius: 20px; font-weight: 600; font-size: 13px; display: inline-block; margin-top: 6px;
+        }
+
+        /* KPI Grid */
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .kpi-card { background: var(--bg-card); border-radius: 16px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .kpi-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
+        .kpi-title { font-size: 12px; color: var(--text-secondary); }
+        .kpi-value { font-size: 18px; font-weight: 700; margin-top: 4px; }
+
+        /* Sections */
+        .section-card { background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+
+        /* List Rows */
+        .tx-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+        .tx-badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-inc { background: var(--green-light); color: var(--green-accent); }
+        .badge-exp { background: var(--red-light); color: var(--red-accent); }
+
+        .amount-pos { color: var(--green-accent); font-weight: 700; font-size: 14px; }
+        .amount-neg { color: var(--text-primary); font-weight: 700; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>Hola, Alba ✨</h1>
+            <p>Resumen de tus movimientos</p>
+        </div>
+        <div style="font-size:24px;">💳</div>
+    </div>
+
+    <!-- Cargar Extracto desde el Móvil -->
+    <div class="upload-card" onclick="document.getElementById('fileInput').click()">
+        <span style="font-size:20px;">📄</span>
+        <div style="font-size:13px; font-weight:600; color:#475569;">Cargar nuevo extracto bancario</div>
+        <div style="font-size:11px; color:#94a3b8;">Formatos compatibles: CSV, Excel (.xlsx, .xls)</div>
+        <span class="upload-btn">Seleccionar archivo</span>
+        <input type="file" id="fileInput" accept=".csv, .xlsx, .xls" onchange="procesarArchivo(event)">
+    </div>
+
+    <!-- KPIs Principales -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--green-light); color:var(--green-accent);">↑</div>
+            <div class="kpi-title">Ingresos</div>
+            <div class="kpi-value" id="kpiIngresos" style="color:var(--green-accent);">+0.00 €</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--red-light); color:var(--red-accent);">↓</div>
+            <div class="kpi-title">Gastos</div>
+            <div class="kpi-value" id="kpiGastos" style="color:var(--red-accent);">-0.00 €</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--purple-light); color:var(--purple-accent);">💼</div>
+            <div class="kpi-title">Saldo Inicial</div>
+            <div class="kpi-value" id="kpiSaldoInicial">0.00 €</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--blue-light); color:var(--blue-accent);">📊</div>
+            <div class="kpi-title">Balance Final</div>
+            <div class="kpi-value" id="kpiSaldoFinal">0.00 €</div>
+        </div>
+    </div>
+
+    <!-- Gráfico por Categorías -->
+    <div class="section-card">
+        <div class="section-title">Gastos por categoría</div>
+        <div style="max-height: 220px; position: relative; display: flex; justify-content: center;">
+            <canvas id="chartCategorias"></canvas>
+        </div>
+    </div>
+
+    <!-- Transacciones -->
+    <div class="section-card">
+        <div class="section-title">Últimos movimientos</div>
+        <div id="listaMovimientos"></div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+
+        // Cargar por defecto el JSON generado por C++
+        fetch('data/datos.json')
+            .then(res => res.json())
+            .then(data => renderDashboard(data))
+            .catch(() => console.log("Cargue un archivo desde el móvil"));
+
+        function renderDashboard(data) {
+            document.getElementById('kpiIngresos').innerText = '+' + data.totalIngresos.toFixed(2) + ' €';
+            document.getElementById('kpiGastos').innerText = '-' + data.totalGastos.toFixed(2) + ' €';
+            document.getElementById('kpiSaldoInicial').innerText = data.saldoInicial.toFixed(2) + ' €';
+            document.getElementById('kpiSaldoFinal').innerText = data.saldoFinal.toFixed(2) + ' €';
+
+            const listaContainer = document.getElementById('listaMovimientos');
+            listaContainer.innerHTML = '';
+            const categorias = {};
+
+            data.movimientos.forEach(m => {
+                const esGasto = m.importe < 0;
+                const row = document.createElement('div');
+                row.className = 'tx-row';
+                row.innerHTML = `
+                    <div>
+                        <div style="font-size:13px; font-weight:600;">${m.concepto}</div>
+                        <span class="tx-badge ${esGasto ? 'badge-exp' : 'badge-inc'}">${m.categoria}</span>
+                    </div>
+                    <div class="${esGasto ? 'amount-neg' : 'amount-pos'}">
+                        ${esGasto ? '-' : '+'}${Math.abs(m.importe).toFixed(2)} €
+                    </div>
+                `;
+                listaContainer.appendChild(row);
+
+                if (esGasto) {
+                    categorias[m.categoria] = (categorias[m.categoria] || 0) + Math.abs(m.importe);
+                }
+            });
+
+            // Dibujar Donut Chart
+            if (chartInstance) chartInstance.destroy();
+            const ctx = document.getElementById('chartCategorias').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categorias),
+                    datasets: [{
+                        data: Object.values(categorias),
+                        backgroundColor: ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa', '#f472b6']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // Lectura directa de archivos subidos desde el navegador móvil (Excel / CSV)
+        function procesarArchivo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
+
+                let totalIngresos = 0, totalGastos = 0;
+                const movimientos = [];
+
+                rows.forEach((row, index) => {
+                    if (index < 6 || !row[2]) return; // Omitir cabecera Santander
+
+                    let concepto = String(row[2]);
+                    let importeRaw = String(row[3] || '0').replace('−', '-').replace(' ', '').replace('.', '').replace(',', '.');
+                    let importe = parseFloat(importeRaw) || 0;
+
+                    if (importe !== 0) {
+                        let cat = "Varios";
+                        let cMin = concepto.toLowerCase();
+                        if (cMin.includes("mercadona") || cMin.includes("hipercor")) cat = "Alimentación";
+                        else if (cMin.includes("revolut")) cat = "Transferencias";
+                        else if (cMin.includes("bizum")) cat = "Bizum";
+                        else if (cMin.includes("pull") || cMin.includes("victoria")) cat = "Ropa";
+                        else if (cMin.includes("actex")) cat = "Nómina";
+
+                        if (importe < 0) totalGastos += Math.abs(importe);
+                        else totalIngresos += importe;
+
+                        movimientos.push({ concepto: concepto.substr(0, 20), categoria: cat, importe: importe });
+                    }
+                });
+
+                renderDashboard({
+                    saldoInicial: 3459.41,
+                    saldoFinal: 3459.41 + totalIngresos - totalGastos,
+                    totalIngresos: totalIngresos,
+                    totalGastos: totalGastos,
+                    movimientos: movimientos
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    </script>
+</body>
+</html>
